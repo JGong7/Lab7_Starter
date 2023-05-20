@@ -45,7 +45,20 @@ function initializeServiceWorker() {
   // We first must register our ServiceWorker here before any of the code in
   // sw.js is executed.
   if ('serviceWorker' in navigator){
-    window.addEventListener('load', ifLoad);
+    window.addEventListener('load', async () =>{
+      try{
+        const register = await navigator.serviceWorker.register("./sw.js", {scope: "."});
+        if (register.installing){
+          console.log("Service worker installing");
+        }else if (register.waiting){
+          console.log("Service worker installed");
+        }else if (register.active){
+          console.log("Service worker active");
+        }
+      } catch (error){
+        console.error(`Registration failed with ${error}`);
+      }
+    });
   }
   // *B1. TODO - Check if 'serviceWorker' is supported in the current browser
   // B2. TODO - Listen for the 'load' event on the window object.
@@ -58,8 +71,8 @@ function initializeServiceWorker() {
   //            log that it has failed.
   // STEPS B6 ONWARDS WILL BE IN /sw.js
 }
-function ifLoad(){
-  navigator.serviceWorker.register("/sw.js").then(
+/*async function ifLoad(){
+  navigator.serviceWorker.register("./sw.js").then(
     (registration) =>{
       console.log("The registration was successful");
     },
@@ -68,7 +81,7 @@ function ifLoad(){
       console.log(error);
     }
   )
-}
+}*/
 
 /**
  * Reads 'recipes' from localStorage and returns an array of
