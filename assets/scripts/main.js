@@ -65,6 +65,7 @@ function ifLoad(){
     },
     (error) =>{
       console.log("The registration has failed");
+      console.log(error);
     }
   )
 }
